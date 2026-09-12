@@ -5,8 +5,7 @@ import api from "@/lib/api";
 import { fmtNum } from "@/lib/format";
 
 export const ItemRow = ({ item, onClick, testId }) => (
-  <button data-testid={testId} onClick={onClick} className="flex w-full items-center gap-3 px-4 py-3 text-left active:bg-gray-50">
-    <div className="h-11 w-11 flex-shrink-0 rounded-xl bg-gray-200" />
+  <button data-testid={testId} onClick={onClick} className="flex w-full items-center gap-3 px-4 py-3.5 text-left active:bg-gray-50">
     <div className="min-w-0 flex-1">
       <p className="truncate text-[15px] font-medium text-[#111827]">{item.name}</p>
       <p className="truncate text-[12px] text-gray-400">
