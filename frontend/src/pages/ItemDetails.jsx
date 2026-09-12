@@ -59,7 +59,7 @@ export default function ItemDetails() {
 
       <div className="flex gap-4 bg-white px-4 py-5">
         <div className="h-[100px] w-[100px] flex-shrink-0 rounded-2xl bg-gray-200" />
-        <h2 data-testid="item-name" className="pt-1 text-[18px] font-semibold leading-snug text-[#111827]">{item.name}</h2>
+        <h2 data-testid="item-name" className="min-w-0 flex-1 break-words pt-1 text-[18px] font-semibold leading-snug text-[#111827]">{item.name}</h2>
       </div>
       <div className="mt-2.5 bg-white">
         <Row label="SKU" value={item.sku} testId="item-sku" />
