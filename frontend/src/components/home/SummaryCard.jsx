@@ -2,12 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import { fmtNum, fmtShort } from "@/lib/format";
 
 const Slide = ({ label, data }) => (
-  <div className="w-full flex-shrink-0 snap-center px-2">
-    <div className="flex items-baseline gap-3">
-      <span className="text-[26px] font-bold">{label}</span>
-      <span className="text-[22px] text-white/70">{data ? fmtShort(data.date) : ""}</span>
+  <div className="w-full flex-shrink-0 snap-center px-1">
+    <div className="flex items-baseline gap-2">
+      <span className="text-[17px] font-bold">{label}</span>
+      <span className="text-[14px] text-white/60">{data ? fmtShort(data.date) : ""}</span>
     </div>
-    <div className="mt-8 flex items-end">
+    <div className="mt-5 flex items-end">
       <Stat value={data?.total} label="Total" wide />
       <Divider />
       <Stat value={data?.stock_in} label="Stock In" />
@@ -17,11 +17,11 @@ const Slide = ({ label, data }) => (
   </div>
 );
 
-const Divider = () => <div className="mx-2 mb-1 h-16 w-px bg-white/40" />;
+const Divider = () => <div className="mx-2 mb-1 h-10 w-px bg-white/30" />;
 const Stat = ({ value, label, wide }) => (
   <div className={`min-w-0 ${wide ? "flex-[1.4]" : "flex-1 pl-2"}`}>
-    <p className="truncate text-[34px] font-bold leading-none">{fmtNum(value)}</p>
-    <p className="mt-2 whitespace-nowrap text-[15px] text-white/80">{label}</p>
+    <p className="truncate text-[26px] font-bold leading-none">{fmtNum(value)}</p>
+    <p className="mt-1.5 whitespace-nowrap text-[12px] text-white/70">{label}</p>
   </div>
 );
 

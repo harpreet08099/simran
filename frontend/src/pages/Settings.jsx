@@ -15,17 +15,18 @@ export default function Settings() {
 
   return (
     <div data-testid="settings-page">
-      <div className="mt-3 flex items-center gap-4 bg-white px-5 py-5">
-        <Avatar name={user?.name} size={56} />
+      <div className="mt-3 flex items-center gap-3.5 bg-white px-5 py-4">
+        <Avatar name={user?.name} size={48} />
         <div className="min-w-0">
-          <p className="truncate text-[19px] font-semibold" data-testid="settings-user-name">{user?.name}</p>
-          <p className="truncate text-sm text-gray-400" data-testid="settings-user-role">{ROLE_LABEL[user?.role]} · {user?.email}</p>
+          <p className="truncate text-[16px] font-semibold" data-testid="settings-user-name">{user?.name}</p>
+          <p className="truncate text-[12px] text-gray-400" data-testid="settings-user-role">{ROLE_LABEL[user?.role]} · {user?.email}</p>
         </div>
       </div>
 
       {isMain && (
         <SettingsGroup title="Main Admin" testId="settings-main-admin-group">
           <SettingsRow testId="settings-sub-admins" label="Sub Admins" onClick={() => navigate("/settings/sub-admins")} />
+          <SettingsRow testId="settings-app" label="App Logo & Install" onClick={() => navigate("/settings/app")} />
         </SettingsGroup>
       )}
 

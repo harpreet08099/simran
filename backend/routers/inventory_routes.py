@@ -9,7 +9,7 @@ from db import db
 from auth import get_current_user, resolve_team_id
 
 router = APIRouter(tags=["inventory"])
-TxType = Literal["stock_in", "stock_out", "move", "adjust"]
+TxType = Literal["stock_in", "stock_out", "move", "adjust", "return"]
 
 
 class ItemIn(BaseModel):
@@ -77,7 +77,7 @@ async def _apply_transaction(tid: str, user: dict, body: TxIn) -> dict:
             raise HTTPException(status_code=404, detail="Item not found")
         stock = dict(item.get("stock", {}))
         before = int(stock.get(body.location, 0))
-        if body.type == "stock_in":
+        if body.type in ("stock_in", "return"):
             if line.qty <= 0:
                 raise HTTPException(status_code=400, detail="Quantity must be greater than 0")
             after, delta = before + line.qty, line.qty
@@ -257,3 +257,77 @@ async def dashboard(team_id: Optional[str] = None, user: dict = Depends(get_curr
     return {"today": summarize(today_start, now + timedelta(days=1), total_now),
             "yesterday": summarize(yesterday_start, today_start, total_now - net_today),
             "low_stock_count": low_stock, "item_count": len(items)}
+
+
+
+# ---------- Reports: stock as of a past date ----------
+@router.get("/reports/stock-by-date")
+async def stock_by_date(date: str, team_id: Optional[str] = None, user: dict = Depends(get_current_user)):
+    """Reconstruct each item's quantity as of the END of the given date (YYYY-MM-DD)."""
+    tid = await resolve_team_id(user, team_id)
+    try:
+        day = datetime.fromisoformat(date).replace(tzinfo=timezone.utc)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid date")
+    end_of_day = day.replace(hour=0, minute=0, second=0, microsecond=0) + timedelta(days=1)
+    items = await db.items.find({"team_id": tid, "is_archived": False}, {"_id": 0}).sort("name", 1).to_list(5000)
+    # Sum deltas of transactions AFTER end_of_day, then subtract from current quantity.
+    future = await db.transactions.find(
+        {"team_id": tid, "created_at": {"$gte": end_of_day.isoformat()}}, {"_id": 0}).to_list(20000)
+    delta_after: dict = {}
+    for tx in future:
+        for li in tx["items"]:
+            delta_after[li["item_id"]] = delta_after.get(li["item_id"], 0) + li.get("delta", 0)
+    result = []
+    for it in items:
+        past_qty = int(it.get("quantity", 0)) - delta_after.get(it["id"], 0)
+        result.append({"id": it["id"], "name": it["name"], "sku": it.get("sku"),
+                       "category": it.get("category"), "brand": it.get("brand"),
+                       "unit": it.get("unit"), "quantity": past_qty})
+    return {"date": date, "items": result}
+
+
+# ---------- Bundles (grouped items) ----------
+class BundleItemIn(BaseModel):
+    item_id: str
+    qty: int = Field(ge=1)
+
+
+class BundleIn(BaseModel):
+    name: str
+    items: List[BundleItemIn]
+
+
+@router.get("/bundles")
+async def list_bundles(team_id: Optional[str] = None, user: dict = Depends(get_current_user)):
+    tid = await resolve_team_id(user, team_id)
+    return await db.bundles.find({"team_id": tid}, {"_id": 0}).sort("created_at", -1).to_list(500)
+
+
+@router.post("/bundles")
+async def create_bundle(body: BundleIn, team_id: Optional[str] = None, user: dict = Depends(get_current_user)):
+    tid = await resolve_team_id(user, team_id)
+    if not body.name.strip():
+        raise HTTPException(status_code=400, detail="Bundle name is required")
+    if not body.items:
+        raise HTTPException(status_code=400, detail="Add at least one item to the bundle")
+    lines = []
+    for li in body.items:
+        item = await db.items.find_one({"id": li.item_id, "team_id": tid, "is_archived": False}, {"_id": 0})
+        if not item:
+            raise HTTPException(status_code=404, detail="Item not found")
+        lines.append({"item_id": item["id"], "name": item["name"], "sku": item.get("sku"), "qty": li.qty})
+    doc = {"id": str(uuid.uuid4()), "team_id": tid, "name": body.name.strip(), "items": lines,
+           "created_by": user["id"], "created_at": _now().isoformat()}
+    await db.bundles.insert_one(doc)
+    doc.pop("_id", None)
+    return doc
+
+
+@router.delete("/bundles/{bundle_id}")
+async def delete_bundle(bundle_id: str, team_id: Optional[str] = None, user: dict = Depends(get_current_user)):
+    tid = await resolve_team_id(user, team_id)
+    res = await db.bundles.delete_one({"id": bundle_id, "team_id": tid})
+    if res.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Bundle not found")
+    return {"ok": True}

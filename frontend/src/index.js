@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "@/index.css";
+import "@/lib/install";
 import App from "@/App";
 
 const queryClient = new QueryClient({
@@ -12,6 +13,12 @@ const queryClient = new QueryClient({
     },
   },
 });
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js").catch(() => {});
+  });
+}
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

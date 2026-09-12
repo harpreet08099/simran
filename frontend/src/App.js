@@ -17,6 +17,11 @@ import TeamSettings from "@/pages/TeamSettings";
 import Subscription from "@/pages/Subscription";
 import Members from "@/pages/Members";
 import SubAdmins from "@/pages/SubAdmins";
+import StockByDate from "@/pages/StockByDate";
+import Labels from "@/pages/Labels";
+import Bundles from "@/pages/Bundles";
+import AppSettings from "@/pages/AppSettings";
+import InventoryCount from "@/pages/InventoryCount";
 
 const Protected = ({ roles }) => {
   const { user, loading } = useAuth();
@@ -53,6 +58,10 @@ function App() {
             <Route path="/transactions/new/:type" element={<NewTransaction />} />
             <Route path="/transactions/:id" element={<TransactionDetails />} />
             <Route path="/low-stock" element={<LowStock />} />
+            <Route path="/reports/stock-by-date" element={<StockByDate />} />
+            <Route path="/labels" element={<Labels />} />
+            <Route path="/bundles" element={<Bundles />} />
+            <Route path="/inventory-count" element={<InventoryCount />} />
             <Route path="/settings/profile" element={<Profile />} />
             <Route path="/settings/team" element={<TeamSettings mode="team" />} />
             <Route path="/settings/locations" element={<TeamSettings mode="locations" />} />
@@ -62,6 +71,7 @@ function App() {
             </Route>
             <Route element={<Protected roles={["main_admin"]} />}>
               <Route path="/settings/sub-admins" element={<SubAdmins />} />
+              <Route path="/settings/app" element={<AppSettings />} />
             </Route>
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />

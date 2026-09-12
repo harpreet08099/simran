@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
 import api from "@/lib/api";
+import { fetchAppConfig } from "@/lib/appConfig";
 
 const AuthContext = createContext(null);
 
@@ -8,6 +9,17 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [team, setTeam] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [appConfig, setAppConfig] = useState(null);
+
+  const refreshAppConfig = useCallback(async () => {
+    try {
+      const cfg = await fetchAppConfig();
+      setAppConfig(cfg);
+      return cfg;
+    } catch { /* ignore */ }
+  }, []);
+
+  useEffect(() => { refreshAppConfig(); }, [refreshAppConfig]);
 
   const refresh = useCallback(async () => {
     const { data } = await api.get("/auth/me");
@@ -53,7 +65,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, team, loading, login, logout, refresh, setTeam }}>
+    <AuthContext.Provider value={{ user, team, loading, login, logout, refresh, setTeam, appConfig, refreshAppConfig }}>
       {children}
     </AuthContext.Provider>
   );

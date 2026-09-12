@@ -12,7 +12,7 @@ from fastapi import FastAPI, APIRouter
 from starlette.middleware.cors import CORSMiddleware
 from db import db, client
 from auth import hash_password, verify_password, ROLE_MAIN
-from routers import auth_routes, team_routes, inventory_routes
+from routers import auth_routes, team_routes, inventory_routes, app_config_routes
 
 app = FastAPI()
 api_router = APIRouter(prefix="/api")
@@ -26,6 +26,7 @@ async def root():
 api_router.include_router(auth_routes.router)
 api_router.include_router(team_routes.router)
 api_router.include_router(inventory_routes.router)
+api_router.include_router(app_config_routes.router)
 app.include_router(api_router)
 
 app.add_middleware(

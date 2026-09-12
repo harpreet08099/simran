@@ -23,6 +23,22 @@ UI must match the user's reference screenshots (Simran Mobile style): blue top b
 - `transactions`: id, team_id, type, location, to_location, memo, items[{item_id,name,category,brand,qty,before,after,delta}], total_qty, user_id, user_name, created_at
 - `login_attempts`
 
+## Implemented — Home redesign, PWA & new features (2026-06)
+- Home screen fully redesigned to match reference screenshots: swipeable Today/Yesterday summary card at top, then card sections — Items (Add Item), Transactions (Stock In/Out/Move/Adjust), Low Stock Alerts, Inventory Count, Team Members, Past Quantity (View Stock by Date), Barcode Labels (Print Item Label), Purchases & Sales (Purchases/Sales/Returns/Bundles), and App (main admin only). All cards always visible & scrollable.
+- Typography reduced app-wide (mobile-first); base font 15px; fixed horizontal (left) overflow on Items page via global overflow-x hidden.
+- Top bar now always shows the shop name + app logo (never admin/member names) for all roles.
+- New fully-functional features:
+  - **View Stock by Date** (`GET /api/reports/stock-by-date`) — reconstructs each item's qty as of a chosen past date.
+  - **Print Item Label** (`/labels`) — renders a CODE128 barcode (jsbarcode) with name/price/SKU and window.print().
+  - **Bundles** (`/bundles`, `GET/POST/DELETE /api/bundles`) — group items with quantities; delete via AlertDialog.
+  - **Inventory Count** (`/inventory-count`) — physical stock-take; applies a single "Inventory Count" adjust transaction for changed items.
+  - **Returns** — new `return` transaction type (increases stock, like reverse stock-out).
+- **App logo & Install (PWA)** — main admin page `/settings/app`:
+  - Logo upload (`PUT /api/app-config`, main admin) resized to 192/512 PNG, stored in Mongo `settings` (object-storage service was returning 500s, so DB storage used for the single small logo).
+  - `GET /api/app-config` (public), `GET /api/app-config/icon-{192,512}.png` (public; returns a generated blue lightning-bolt default when no logo set), `GET /api/manifest.webmanifest` (display: standalone, valid icons).
+  - Installable PWA: manifest + service worker (`public/sw.js`) + "Create & Install shortcut" button using beforeinstallprompt; opens full-screen (no browser bar). iOS/Android fallback instructions shown.
+- New DB: `settings` (single `app` doc: app_name, logo_192/512 bytes, version), `bundles` (id, team_id, name, items[], created_at).
+
 ## Implemented (2026-09-12)
 - JWT auth, roles, main admin seed, brute-force lockout
 - Sub admin management (create/edit/revoke/restore/delete, lifetime or N-day access) + member management (max 20/team); revocation & expiry cascade to members
@@ -35,6 +51,6 @@ UI must match the user's reference screenshots (Simran Mobile style): blue top b
 ## Backlog
 - P1: Barcode camera scanning (scan → find item / create with barcode)
 - P1: Main admin view of a sub admin's inventory in the UI (backend already supports `?team_id=`)
-- P2: Purchases / Sales / Returns, Inventory Count, Reports, CSV export, item photos (object storage)
-- P2: Replace `window.confirm` with AlertDialog; MongoDB transactions for concurrent stock updates
-- P3: Push notifications, offline mode, bundles
+- P2: Reports, CSV export, item photos (object storage — service currently 500ing)
+- P2: MongoDB transactions for concurrent stock updates
+- P3: Push notifications, offline mode
