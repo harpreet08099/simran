@@ -18,7 +18,7 @@ const ItemPicker = ({ open, onClose, onPick, exclude }) => {
   }, [q, open]);
   return (
     <Sheet open={open} onOpenChange={(o) => !o && onClose()}>
-      <SheetContent side="bottom" className="mx-auto h-[80vh] max-w-md rounded-t-3xl">
+      <SheetContent side="bottom" className="mx-auto h-[80vh] lg:max-w-md rounded-t-3xl">
         <SheetHeader><SheetTitle>Select item</SheetTitle></SheetHeader>
         <div className="mt-3 flex items-center rounded-xl bg-gray-100 px-3 py-2.5">
           <Search size={18} className="shrink-0 text-gray-400" />
@@ -124,7 +124,7 @@ export default function NewTransaction() {
             <input data-testid="tx-memo-input" required={isAdjust} value={memo} onChange={(e) => setMemo(e.target.value)} className="field mt-1" placeholder={isAdjust ? "e.g. Physical count correction" : "Optional note"} /></label>
         </div>
 
-        <div className="fixed bottom-0 left-1/2 w-full max-w-md -translate-x-1/2 bg-white p-4 shadow-[0_-4px_16px_rgba(0,0,0,0.06)]">
+        <div className="fixed bottom-0 left-1/2 w-full lg:max-w-md -translate-x-1/2 bg-white p-4 shadow-[0_-4px_16px_rgba(0,0,0,0.06)]">
           <button data-testid="tx-submit-button" disabled={busy || lines.length === 0} className="btn-primary w-full" style={{ backgroundColor: m.color }}>
             {busy ? "Saving…" : `Save ${m.label}`}
           </button>

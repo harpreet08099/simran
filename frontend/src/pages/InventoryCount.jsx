@@ -67,7 +67,7 @@ export default function InventoryCount() {
         })}
       </div>
 
-      <div className="fixed bottom-0 left-1/2 z-20 w-full max-w-md -translate-x-1/2 border-t border-gray-100 bg-white p-4">
+      <div className="fixed bottom-0 left-1/2 z-20 w-full lg:max-w-md -translate-x-1/2 border-t border-gray-100 bg-white p-4">
         <button data-testid="inventory-count-save" disabled={busy} onClick={submit} className="btn-primary w-full">
           {busy ? "Saving…" : `Apply Count${changed.length ? ` (${changed.length})` : ""}`}
         </button>

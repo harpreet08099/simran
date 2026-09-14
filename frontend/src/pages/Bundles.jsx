@@ -20,7 +20,7 @@ const ItemPicker = ({ open, onClose, onPick, exclude }) => {
   }, [q, open]);
   return (
     <Sheet open={open} onOpenChange={(o) => !o && onClose()}>
-      <SheetContent side="bottom" className="mx-auto h-[80vh] max-w-md rounded-t-3xl">
+      <SheetContent side="bottom" className="mx-auto h-[80vh] lg:max-w-md rounded-t-3xl">
         <SheetHeader><SheetTitle className="text-[16px]">Add item to bundle</SheetTitle></SheetHeader>
         <div className="mt-3 flex items-center rounded-xl bg-gray-100 px-3 py-2.5">
           <Search size={18} className="shrink-0 text-gray-400" />
@@ -63,7 +63,7 @@ const CreateSheet = ({ open, onClose, onCreated }) => {
 
   return (
     <Sheet open={open} onOpenChange={(o) => !o && onClose()}>
-      <SheetContent side="bottom" className="mx-auto max-h-[85vh] max-w-md overflow-y-auto rounded-t-3xl">
+      <SheetContent side="bottom" className="mx-auto max-h-[85vh] lg:max-w-md overflow-y-auto rounded-t-3xl">
         <SheetHeader><SheetTitle className="text-[16px]">New Bundle</SheetTitle></SheetHeader>
         <div className="mt-4 space-y-4">
           <label className="block">

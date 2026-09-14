@@ -89,7 +89,7 @@ export default function Transactions() {
       </div>
 
       <Sheet open={sheet} onOpenChange={setSheet}>
-        <SheetContent side="bottom" className="mx-auto max-w-md rounded-t-3xl">
+        <SheetContent side="bottom" className="mx-auto lg:max-w-md rounded-t-3xl">
           <SheetHeader><SheetTitle className="text-[16px]">New transaction</SheetTitle></SheetHeader>
           <div className="mt-3 divide-y">
             {Object.entries(TX_META).map(([k, m]) => (

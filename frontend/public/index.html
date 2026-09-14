@@ -2,7 +2,34 @@
 <html lang="en">
     <head>
         <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+        <script>
+            (function () {
+                function fit() {
+                    try {
+                        var el = document.documentElement;
+                        el.style.zoom = "";
+                        var w = el.clientWidth || window.innerWidth;
+                        var h = window.innerHeight;
+                        var coarse = window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
+                        var BASE = 430;
+                        var zoom = 1;
+                        // Touch device whose viewport is wider than a phone (e.g. some standalone PWAs
+                        // render at a large CSS width): scale the whole document up so it fills the
+                        // screen with true phone proportions instead of a stretched desktop layout.
+                        if (coarse && w > 480) zoom = w / BASE;
+                        // Zoom-safe "one screen" height (CSS zoom multiplies vh, so use a px value).
+                        el.style.setProperty("--app-h", (h / zoom) + "px");
+                        if (zoom !== 1) el.style.zoom = zoom.toString();
+                    } catch (e) {}
+                }
+                fit();
+                window.addEventListener("orientationchange", function () { setTimeout(fit, 300); });
+                window.addEventListener("resize", function () {
+                    if (!document.documentElement.style.zoom) fit();
+                });
+            })();
+        </script>
         <meta name="theme-color" content="#2F7CF6" />
         <meta name="description" content="Simran Inventory - manage your stock" />
         <link rel="manifest" href="/api/manifest.webmanifest" />

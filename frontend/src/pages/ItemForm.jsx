@@ -85,7 +85,7 @@ export default function ItemForm() {
             <textarea data-testid="item-description-input" className="field mt-1 min-h-[80px]" value={form.description} onChange={set("description")} />
           </label>
         </div>
-        <div className="fixed bottom-0 left-1/2 w-full max-w-md -translate-x-1/2 bg-white p-4 shadow-[0_-4px_16px_rgba(0,0,0,0.06)]">
+        <div className="fixed bottom-0 left-1/2 w-full lg:max-w-md -translate-x-1/2 bg-white p-4 shadow-[0_-4px_16px_rgba(0,0,0,0.06)]">
           <button data-testid="item-save-button" disabled={busy} className="btn-primary w-full">
             {busy ? "Saving…" : editing ? "Save Changes" : "Add Item"}
           </button>

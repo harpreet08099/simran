@@ -50,7 +50,7 @@ body {
 
 @layer components {
     .app-frame {
-        @apply relative mx-auto min-h-screen w-full max-w-md overflow-x-hidden bg-[#F4F5F7];
+        @apply relative mx-auto min-h-screen w-full lg:max-w-md overflow-x-hidden bg-[#F4F5F7];
     }
     .topbar {
         background: linear-gradient(90deg, #2b78f3 0%, #3d8bff 100%);
@@ -68,7 +68,7 @@ body {
         box-shadow: 0 2px 12px rgba(17, 24, 39, 0.06);
     }
     .bottom-nav {
-        @apply fixed bottom-0 left-1/2 z-30 flex w-full max-w-md -translate-x-1/2 items-stretch justify-around border-t border-gray-100 bg-white pt-2;
+        @apply fixed bottom-0 left-1/2 z-30 flex w-full lg:max-w-md -translate-x-1/2 items-stretch justify-around border-t border-gray-100 bg-white pt-2;
         padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));
     }
     .nav-tab {

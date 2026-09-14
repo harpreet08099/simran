@@ -75,7 +75,7 @@ export default function ItemDetails() {
       </div>
       {item.description && <div className="mt-2.5 bg-white px-4 py-3 text-[14px] text-gray-600">{item.description}</div>}
 
-      <div className="fixed bottom-0 left-1/2 flex w-full max-w-md -translate-x-1/2 items-center justify-between bg-white px-4 py-4 shadow-[0_-4px_16px_rgba(0,0,0,0.06)]">
+      <div className="fixed bottom-0 left-1/2 flex w-full lg:max-w-md -translate-x-1/2 items-center justify-between bg-white px-4 py-4 shadow-[0_-4px_16px_rgba(0,0,0,0.06)]">
         <button data-testid="item-stock-summary" onClick={() => setLocSheet(true)} className="text-left">
           <p className="text-[13px] text-gray-500">{stock.length > 1 ? "Total" : firstLoc}</p>
           <p className="flex items-center gap-2 text-[28px] font-semibold leading-none text-[#2F7CF6]">
@@ -88,7 +88,7 @@ export default function ItemDetails() {
       </div>
 
       <Sheet open={sheet} onOpenChange={setSheet}>
-        <SheetContent side="bottom" className="mx-auto max-w-md rounded-t-3xl">
+        <SheetContent side="bottom" className="mx-auto lg:max-w-md rounded-t-3xl">
           <SheetHeader><SheetTitle className="text-[16px]">New transaction for {item.name}</SheetTitle></SheetHeader>
           <div className="mt-3 divide-y">
             {Object.entries(TX_META).map(([k, m]) => (
@@ -101,7 +101,7 @@ export default function ItemDetails() {
       </Sheet>
 
       <Sheet open={locSheet} onOpenChange={setLocSheet}>
-        <SheetContent side="bottom" className="mx-auto max-w-md rounded-t-3xl">
+        <SheetContent side="bottom" className="mx-auto lg:max-w-md rounded-t-3xl">
           <SheetHeader><SheetTitle className="text-[16px]">Stock by location</SheetTitle></SheetHeader>
           <div className="mt-3 divide-y" data-testid="item-location-stock">
             {stock.length === 0 && <p className="py-4 text-gray-400">No stock yet</p>}
